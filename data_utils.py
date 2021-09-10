@@ -145,6 +145,8 @@ def load_sts16(need_label=False, use_all_unsupervised_texts=True, no_pair=False)
     return load_sts("16", dataset_names, need_label=need_label, no_pair=no_pair)
 
 def load_stsbenchmark(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
+    # Function edited to return training set when use_all_unsupervised_texts=False.
+
     if need_label:
         assert not no_pair, "Only paired texts need label"
     logging.info("Loading STSBenchmark dataset")
@@ -152,7 +154,7 @@ def load_stsbenchmark(need_label=False, use_all_unsupervised_texts=True, no_pair
     if use_all_unsupervised_texts:
         splits = ["train", "dev", "test"]
     else:
-        splits = ["test"]
+        splits = ["train"]
     for split in splits:
         sts_benchmark_data_path = f"./data/downstream/STS/STSBenchmark/sts-{split}.csv"
         with open(sts_benchmark_data_path, "r") as f:

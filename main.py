@@ -106,6 +106,7 @@ def parse_args():
     
     return parser.parse_args()
 
+
 def set_seed(seed: int, for_multi_gpu: bool):
     """
     Added script to set random seed.
@@ -115,13 +116,14 @@ def set_seed(seed: int, for_multi_gpu: bool):
     torch.manual_seed(seed)
     if for_multi_gpu:
         torch.cuda.manual_seed_all(seed)
-        
+
+
 def main(args):
     logging.info(f"Training arguments: {args.__dict__}")
 
     set_seed(args.seed, for_multi_gpu=False)
 
-    # Check if dataset exsist. If not, download and extract  it
+    # Check if dataset exists. If not, download and extract  it
     nli_dataset_path = 'datasets/AllNLI.tsv.gz'
     sts_dataset_path = 'datasets/stsbenchmark.tsv.gz'
     if not os.path.exists(nli_dataset_path):
@@ -133,7 +135,7 @@ def main(args):
     train_batch_size = args.batch_size
     
     bert_model_type_str = "base" if "base" in args.model_name_or_path else "large"
-#     time_str = datetime.now().strftime("%Y%m%d%H%M%S")
+    # time_str = datetime.now().strftime("%Y%m%d%H%M%S")
 
     adv_loss_rate_str = "" if args.adv_loss_rate == 1.0 else f"-rate{args.adv_loss_rate}"
     adv_param_str = "" if not args.adv_training else f"adv-{args.noise_norm:.3f}{'-stopgrad' if args.adv_loss_stop_grad else ''}{adv_loss_rate_str}_"
@@ -222,7 +224,8 @@ def main(args):
         train_samples = load_datasets(datasets=["sts12", "sts13", "sts14", "sts15", "sts16", "stsb", "sickr"], need_label=False, use_all_unsupervised_texts=True, no_pair=args.no_pair)
     elif args.train_data == "stsb":
         logging.info("Read STS Benchmark train dataset")
-        train_samples = load_datasets(datasets=["stsb"], need_label=False, use_all_unsupervised_texts=True, no_pair=args.no_pair)
+        #train_samples = load_datasets(datasets=["stsb"], need_label=False, use_all_unsupervised_texts=True, no_pair=args.no_pair)
+        train_samples = load_datasets(datasets=["stsb"], need_label=True, use_all_unsupervised_texts=False, no_pair=args.no_pair)
     elif args.train_data in ["mr","cr","subj","mpqa"]:
         logging.info(f"Read {args.train_data.upper()} train dataset")
         train_samples = load_senteval_binary(args.train_data, need_label=False, use_all_unsupervised_texts=True, no_pair=True)
@@ -245,7 +248,7 @@ def main(args):
             train_samples = train_samples * int(1.0 / args.data_proportion)
             logging.info(f"Do upsampling, final size of training dataset is {len(train_samples)}")
     save_samples(train_samples, os.path.join(model_save_path, "train_texts.txt"))
-        
+
     train_dataset = SentencesDataset(train_samples, model=model)
     train_dataloader = DataLoader(train_dataset, shuffle=not args.no_shuffle, batch_size=train_batch_size)
 
@@ -259,6 +262,8 @@ def main(args):
         train_loss = losses.SimCLRLoss(model=model, sentence_embedding_dimension=model.get_sentence_embedding_dimension(), num_labels=len(label2int), concatenation_sent_max_square=args.concatenation_sent_max_square, data_augmentation_strategy=args.data_augmentation_strategy, temperature=args.temperature)
     elif args.use_simsiam:
         train_loss = losses.SimSiamLoss(model=model, sentence_embedding_dimension=model.get_sentence_embedding_dimension(), num_labels=len(label2int), concatenation_sent_max_square=args.concatenation_sent_max_square, data_augmentation_strategy=args.data_augmentation_strategy, temperature=args.temperature)
+    elif args.train_data == 'stsb':
+        train_loss = losses.CosineSimilarityLoss(model=model)
     else:
         train_loss = losses.AdvCLSoftmaxLoss(model=model, sentence_embedding_dimension=model.get_sentence_embedding_dimension(), num_labels=len(label2int), concatenation_sent_max_square=args.concatenation_sent_max_square, normal_loss_stop_grad=args.normal_loss_stop_grad)
 

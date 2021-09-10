@@ -15,7 +15,7 @@ best model from [Sentence-BERT](https://aclanthology.org/D19-1410.pdf).
 
 ## Results for English STS Tasks 
 
-*Reimplementations of ConSERT experiments*
+##### Reimplementations of ConSERT experiments
 
 | ID | Model                 | STS12 | STS13 | STS14 | STS15 | STS16 | STSb | SICK-R | Avg.  |
 |----|-----------------------|:-----:|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:-----:|
@@ -26,7 +26,7 @@ best model from [Sentence-BERT](https://aclanthology.org/D19-1410.pdf).
 | 4  | ConSERT-*sup-unsup*   | 73.18 | 85.15 | 77.28 | 82.79 | 78.48 | 81.86 | 75.23 | 79.14 |
 | 5  | ConSERT-*joint-unsup* | 74.38 | 84.05 | 77.32 | 83.79 | 78.63 | 81.50 | 76.61 | 79.47 |
 
-*New ConSERT models:* 
+##### New ConSERT models:
 
 The original Sentence-BERT paper achieved best results with NLI supervision followed by 
 STS supervision on the STSb training dataset. The ConSERT paper left this unexplored and
@@ -39,10 +39,11 @@ contrastive learning pushes the model to the correct representation space for th
 
 | ID | Model                                     | STS12 | STS13 | STS14 | STS15 | STS16 | STSb | SICK-R | Avg.  |
 |----|-------------------------------------------|:-----:|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:-----:|
-| 1  | SBERT-NLI-STS                             |  |  |  |  |  |  |  |  |
-| 2  | ConSERT-*joint-unsup-STS*                 |  |  |  |  |  |  |  |  |
-| 3  | ConSERT-*joint-STS<sub>joint</sub>*       |  |  |  |  |  |  |  |  |
-| 4  | ConSERT-*joint-STS<sub>joint</sub>-unsup* |  |  |  |  |  |  |  |  |
+| 1  | SBERT-STS                                 |  |  |  |  |  |  |  |  |
+| 2  | SBERT-NLI-STS                             |  |  |  |  |  |  |  |  |
+| 3  | ConSERT-*joint-unsup-STS*                 |  |  |  |  |  |  |  |  |
+| 4  | ConSERT-*joint-STS<sub>joint</sub>*       |  |  |  |  |  |  |  |  |
+| 5  | ConSERT-*joint-STS<sub>joint</sub>-unsup* |  |  |  |  |  |  |  |  |
 
 Notes:
 1. All the models are trained from `bert-base-uncased`.
