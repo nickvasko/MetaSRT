@@ -40,10 +40,10 @@ contrastive learning pushes the model to the correct representation space for th
 | ID | Model                                     | STS12 | STS13 | STS14 | STS15 | STS16 | STSb | SICK-R | Avg.  |
 |----|-------------------------------------------|:-----:|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:-----:|
 | 1  | SBERT-STS                                 | 79.57 | 88.70 | 89.45 | 88.66 | 80.76 | 84.80 | 73.56 | 83.64 |
-| 2  | SBERT-NLI-STS                             |  |  |  |  |  |  |  |  |
-| 3  | ConSERT-*joint-unsup-STS*                 |  |  |  |  |  |  |  |  |
-| 4  | ConSERT-*joint-STS<sub>joint</sub>*       |  |  |  |  |  |  |  |  |
-| 5  | ConSERT-*joint-STS<sub>joint</sub>-unsup* |  |  |  |  |  |  |  |  |
+| 2  | SBERT-NLI-STS                             | 83.68 | 89.46 | 91.31 | 90.07 | 82.08 | 85.89 | 78.52 | 85.82 |
+| 3  | ConSERT-*joint-unsup-STS*                 | 83.62 | 89.79 | 91.36 | 90.48 | 81.90 | 85.25 | 77.99 | 85.77 |
+| 4  | ConSERT-*joint-STS*                       |  |  |  |  |  |  |  |  |
+| 5  | ConSERT-*joint-STS-unsup*                 |  |  |  |  |  |  |  |  |
 
 Notes:
 1. All the models are trained from `bert-base-uncased`.
