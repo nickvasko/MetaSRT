@@ -403,6 +403,13 @@ def main(args):
     train_dataset = SentencesDataset(train_samples, model=model)
     task_dataloader = DataLoader(train_dataset, shuffle=not args.no_shuffle, batch_size=train_batch_size)
 
+    # Configure the training
+    num_epochs = args.num_epochs
+
+    model.num_steps_total = math.ceil(len(train_dataset) * num_epochs / train_batch_size)
+    warmup_steps = math.ceil(len(train_dataset) * num_epochs / train_batch_size * 0.1)  # 10% of train data for warm-up
+    logging.info("Warmup-steps: {}".format(warmup_steps))
+
     # Read STSb training dataset
     logging.info("Read STS Benchmark train dataset")
     train_samples = load_datasets(datasets=["stsb"], need_label=True, use_all_unsupervised_texts=False, no_pair=args.no_pair)
@@ -425,13 +432,6 @@ def main(args):
     dev_evaluator = EmbeddingSimilarityEvaluator.from_input_examples(dev_samples, batch_size=train_batch_size,
                                                                      name='sts-dev',
                                                                      main_similarity=SimilarityFunction.COSINE)
-
-    # Configure the training
-    num_epochs = args.num_epochs
-
-    model.num_steps_total = math.ceil(len(train_dataset) * num_epochs / train_batch_size)
-    warmup_steps = math.ceil(len(train_dataset) * num_epochs / train_batch_size * 0.1)  # 10% of train data for warm-up
-    logging.info("Warmup-steps: {}".format(warmup_steps))
 
     # Train the model
     fit(model, meta_model, task_dataloader, meta_dataloader, task_loss, meta_loss,
