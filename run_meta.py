@@ -31,12 +31,11 @@ from copy import deepcopy
 
 from tensorboardX import SummaryWriter
 from eval import eval_nli_unsup
-from data_utils import load_datasets, save_samples, load_senteval_binary, load_senteval_sst, load_senteval_trec, \
-    load_senteval_mrpc, load_chinese_tsv_data
+from data_utils import load_datasets, save_samples
 from correlation_visualization import corr_visualization
 from transformers import AdamW
-from tqdm.autonotebook import tqdm, trange
-from typing import List, Dict, Tuple, Iterable, Type, Union, Callable, Optional
+from tqdm.autonotebook import trange
+from typing import Dict, Callable, Optional
 
 logging.basicConfig(format='%(asctime)s - %(filename)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -454,8 +453,7 @@ def main(args):
             if row['split'] == 'test':
                 score = float(row['score']) / 5.0  # Normalize score to range 0 ... 1
                 test_samples.append(InputExample(texts=[row['sentence1'], row['sentence2']], label=score))
-    if args.chinese_dataset != "none":
-        test_samples = load_chinese_tsv_data(args.chinese_dataset, "test")
+
     model = SentenceTransformer(model_save_path)
     test_evaluator = EmbeddingSimilarityEvaluator.from_input_examples(test_samples, batch_size=train_batch_size,
                                                                       name='sts-test',
