@@ -151,7 +151,7 @@ def fit(model, meta_model, task_dataloader, meta_dataloader, task_loss_model, me
         apex_amp_opt_level: str = None,
         callback: Callable[[float, int, int], None] = None,
         early_stop_patience: Optional[int] = None,
-        meta_learning_rate: float = 2e-5
+        meta_learning_rate: float = 5e-7
         ):
     """
     Train the model with the given training objective
