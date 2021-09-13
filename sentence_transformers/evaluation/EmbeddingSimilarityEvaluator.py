@@ -82,7 +82,6 @@ class EmbeddingSimilarityEvaluator(SentenceEvaluator):
         euclidean_distances = -paired_euclidean_distances(embeddings1, embeddings2)
         dot_products = [np.dot(emb1, emb2) for emb1, emb2 in zip(embeddings1, embeddings2)]
 
-
         eval_pearson_cosine, _ = pearsonr(labels, cosine_scores)
         eval_spearman_cosine, _ = spearmanr(labels, cosine_scores)
 

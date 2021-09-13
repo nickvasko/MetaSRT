@@ -91,9 +91,6 @@ class SentenceTransformer(nn.Sequential):
                         shutil.rmtree(model_path)
                         raise e
 
-
-
-
             #### Load from disk
             if model_path is not None:
                 logging.info("Load SentenceTransformer from folder: {}".format(model_path))
@@ -123,7 +120,6 @@ class SentenceTransformer(nn.Sequential):
             logging.info("Use pytorch device: {}".format(device))
 
         self._target_device = torch.device(device)
-
 
     def encode(self, sentences: Union[str, List[str], List[int]],
                batch_size: int = 32,
@@ -207,8 +203,6 @@ class SentenceTransformer(nn.Sequential):
 
         return all_embeddings
 
-
-
     def start_multi_process_pool(self, target_devices: List[str] = None, encode_batch_size: int = 32):
         """
         Starts multi process to process the encoding with several, independent processes.
@@ -240,7 +234,6 @@ class SentenceTransformer(nn.Sequential):
 
         return {'input': input_queue, 'output': output_queue, 'processes': processes}
 
-
     @staticmethod
     def stop_multi_process_pool(pool):
         """
@@ -255,7 +248,6 @@ class SentenceTransformer(nn.Sequential):
 
         pool['input'].close()
         pool['output'].close()
-
 
     def encode_multi_process(self, sentences: List[str], pool: Dict[str, object], is_pretokenized: bool = False, chunk_size=None):
         """
@@ -307,7 +299,6 @@ class SentenceTransformer(nn.Sequential):
                 results_queue.put([id, embeddings])
             except queue.Empty:
                 break
-
 
     def get_max_seq_length(self):
         """
@@ -409,7 +400,6 @@ class SentenceTransformer(nn.Sequential):
             features.append(feature_lists)
 
         return {'features': features, 'labels': torch.stack(labels)}
-
 
     def smart_batching_collate_text_only(self, batch):
         """
@@ -665,7 +655,6 @@ class SentenceTransformer(nn.Sequential):
                     self.save(output_path)
             return score
         return None
-
 
     @staticmethod
     def _get_scheduler(optimizer, scheduler: str, warmup_steps: int, t_total: int):
