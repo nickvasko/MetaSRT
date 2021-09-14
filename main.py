@@ -45,7 +45,7 @@ def parse_args():
     Argument settings.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train_data", type=str, choices=["sst2","trec","mrpc","mr","cr","subj","mpqa","nli", "stssick", "stsb"], default="nli", help="Training data, on NLI or STS dataset")
+    parser.add_argument("--train_data", type=str, default="nli", help="Training data, on NLI or STS dataset")
     parser.add_argument("--no_pair", action="store_true", help="If provided, do not pair two training texts")
     parser.add_argument("--data_proportion", type=float, default=1.0, help="The proportion of training dataset")
     parser.add_argument("--do_upsampling", action="store_true", help="If provided, do upsampling to original size of training dataset")
@@ -238,6 +238,10 @@ def main(args):
     elif args.train_data=="mrpc":
         logging.info(f"Read {args.train_data.upper()} train dataset")
         train_samples = load_senteval_mrpc(need_label=False, use_all_unsupervised_texts=True, no_pair=True)
+    else:
+        logging.info(f"Read {args.train_data.upper()} train dataset")
+        datasets, subsets = args.train_data.split('-')
+        train_samples = load_datasets(datasets=[datasets], need_label=False, use_all_unsupervised_texts=True, no_pair=args.no_pair, subset_names=[subsets])
 
     if args.data_proportion != 1.0:
         num_sample_used = int(args.data_proportion * len(train_samples))

@@ -124,25 +124,30 @@ def load_senteval_mrpc(need_label=False, use_all_unsupervised_texts=True, no_pai
     return samples
 
 
-def load_sts12(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
-    dataset_names = ["MSRpar", "MSRvid", "SMTeuroparl", "surprise.OnWN", "surprise.SMTnews"]
+def load_sts12(need_label=False, use_all_unsupervised_texts=True, no_pair=False, dataset_names=None):
+    if dataset_names is None:
+        dataset_names = ["MSRpar", "MSRvid", "SMTeuroparl", "surprise.OnWN", "surprise.SMTnews"]
     return load_sts("12", dataset_names, need_label=need_label, no_pair=no_pair)
     
-def load_sts13(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
-    dataset_names = ["headlines", "OnWN", "FNWN"]
+def load_sts13(need_label=False, use_all_unsupervised_texts=True, no_pair=False, dataset_names=None):
+    if dataset_names is None:
+        dataset_names = ["headlines", "OnWN", "FNWN"]
     return load_sts("13", dataset_names, need_label=need_label, no_pair=no_pair)
 
-def load_sts14(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
-    dataset_names = ["images", "OnWN", "tweet-news", "deft-news", "deft-forum", "headlines"]
+def load_sts14(need_label=False, use_all_unsupervised_texts=True, no_pair=False, dataset_names=None):
+    if dataset_names is None:
+        dataset_names = ["images", "OnWN", "tweet-news", "deft-news", "deft-forum", "headlines"]
     return load_sts("14", dataset_names, need_label=need_label, no_pair=no_pair)
 
-def load_sts15(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
-    dataset_names = ["answers-forums", "answers-students", "belief", "headlines", "images"]
+def load_sts15(need_label=False, use_all_unsupervised_texts=True, no_pair=False, dataset_names=None):
+    if dataset_names is None:
+        dataset_names = ["answers-forums", "answers-students", "belief", "headlines", "images"]
     return load_sts("15", dataset_names, need_label=need_label, no_pair=no_pair)
 
-def load_sts16(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
-    dataset_names = ["answer-answer", "headlines", "plagiarism", "postediting", "question-question"]
-    return load_sts("16", dataset_names, need_label=need_label, no_pair=no_pair)
+def load_sts16(need_label=False, use_all_unsupervised_texts=True, no_pair=False, dataset_names=None):
+    if dataset_names is None:
+        dataset_names = ["answer-answer", "headlines", "plagiarism", "postediting", "question-question"]
+    return load_sts("16", dataset_names, need_label=need_label, no_pair=no_pair, dataset_names=None)
 
 def load_stsbenchmark(need_label=False, use_all_unsupervised_texts=True, no_pair=False):
     # Function edited to return training set when use_all_unsupervised_texts=False.
@@ -202,7 +207,7 @@ def load_sickr(need_label=False, use_all_unsupervised_texts=True, no_pair=False)
     logging.info(f"Loaded examples from SICK dataset, total {len(all_samples)} examples")
     return all_samples
 
-def load_datasets(datasets=None, need_label=False, use_all_unsupervised_texts=True, no_pair=False):
+def load_datasets(datasets=None, need_label=False, use_all_unsupervised_texts=True, no_pair=False, subset_names=None):
     load_function_mapping = {
         "sts12": load_sts12,
         "sts13": load_sts13,
@@ -216,7 +221,11 @@ def load_datasets(datasets=None, need_label=False, use_all_unsupervised_texts=Tr
     all_samples = []
     for dataset in datasets:
         func = load_function_mapping[dataset]
-        all_samples.extend(func(need_label=need_label, use_all_unsupervised_texts=use_all_unsupervised_texts, no_pair=no_pair))
+        if dataset in ['sts12', 'sts13', 'sts14', 'sts15', 'sts16']:
+            all_samples.extend(func(need_label=need_label, use_all_unsupervised_texts=use_all_unsupervised_texts, no_pair=no_pair,
+                                    dataset_names=subset_names))
+        else:
+            all_samples.extend(func(need_label=need_label, use_all_unsupervised_texts=use_all_unsupervised_texts, no_pair=no_pair))
     logging.info(f"Loaded data from datasets {datasets}, total number of samples {len(all_samples)}")
     return all_samples
 
